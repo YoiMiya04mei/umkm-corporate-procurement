@@ -1,0 +1,222 @@
+// This is your Prisma schema file for local development & zero-setup testing.
+// For PostgreSQL production deployment, see prisma/schema.postgresql.prisma.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  role         String   @default("ADMIN") // ADMIN, STAFF
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model CompanySetting {
+  id                 String   @id @default("default")
+  name               String   @default("PT MITRA KARYA PRATAMA")
+  legalName          String   @default("PT Mitra Karya Pratama Mandiri")
+  tagline            String   @default("Solusi Terpercaya Pengadaan Barang dan Layanan Jasa Terpadu")
+  logoUrl            String?
+  faviconUrl         String?
+  description        String   @default("Perusahaan terkemuka penyedia solusi pengadaan barang (supplier) dan layanan jasa (service provider) untuk korporasi, institusi, dan pemerintahan dengan komitmen kualitas, transparansi, dan ketepatan waktu.")
+  history            String?
+  vision             String   @default("Menjadi mitra pengadaan barang dan penyedia jasa terkemuka di Indonesia yang terpercaya, profesional, dan memberikan nilai tambah berkelanjutan bagi seluruh pemangku kepentingan.")
+  mission            String   @default("[\"Menyediakan produk berkualitas tinggi dengan harga yang kompetitif.\", \"Memberikan pelayanan prima dan responsif dalam setiap proyek pengadaan dan jasa.\", \"Membangun kemitraan strategis jangka panjang yang berlandaskan transparansi dan integritas.\", \"Menerapkan tata kelola perusahaan yang profesional dan patuh terhadap standar regulasi.\"]")
+  coreValues         String   @default("[{\"title\":\"Integritas\",\"desc\":\"Menjunjung tinggi kejujuran, etika bisnis, dan kepatuhan hukum.\"},{\"title\":\"Kualitas Unggul\",\"desc\":\"Menjamin setiap produk dan pekerjaan memenuhi spesifikasi terbaik.\"},{\"title\":\"Ketepatan Waktu\",\"desc\":\"Memastikan jadwal pengiriman dan penyelesaian proyek tepat waktu.\"},{\"title\":\"Orientasi Solusi\",\"desc\":\"Memberikan rekomendasi teknis yang efisien dan bernilai ekonomis bagi klien.\"}]")
+  serviceCommitments String   @default("[\"Jaminan Garansi Produk Resmi & Baru\", \"Dukungan Teknis & Purna Jual Responsif 24/7\", \"Transparansi Dokumen Legalitas & Penagihan\", \"SLA Pengiriman dan Pengerjaan Terukur\"]")
+  
+  // Legalities (Configurable by admin)
+  nib                String?  @default("0220101234567 (Placeholder - Isi di CMS)")
+  npwp               String?  @default("01.234.567.8-012.000 (Placeholder - Isi di CMS)")
+  aktaPendirian      String?  @default("Akta Notaris No. 25 Tanggal 15 Januari 2018 (Placeholder - Isi di CMS)")
+  skKemenkumham      String?  @default("AHU-0012345.AH.01.01.TAHUN 2018 (Placeholder - Isi di CMS)")
+  certifications     String?  @default("[\"Sertifikat Standar KBLI 4659\", \"Sertifikat K3 / SMK3 Terakreditasi\"]")
+  
+  // Contact & Location
+  address            String   @default("Jl. Raya Industri Utama No. 88, Kawasan Niaga Terpadu")
+  city               String   @default("Jakarta Selatan")
+  province           String   @default("DKI Jakarta")
+  postalCode         String   @default("12340")
+  phone              String   @default("(021) 7890-1234")
+  whatsapp           String   @default("6281234567890")
+  email              String   @default("procurement@perusahaan.co.id")
+  operationalHours   String   @default("Senin - Jumat: 08:30 - 17:30 WIB | Sabtu: 09:00 - 14:00 WIB")
+  googleMapsEmbed    String   @default("https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d126920.2858169222!2d106.75628586392348!3d-6.229569450371485!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f3e49fe3dd05%3A0x6b245cb5797d10e!2sJakarta%20Selatan!5e0!3m2!1sid!2sid!4v1700000000000!5m2!1sid!2sid")
+  
+  // Social Media
+  socialLinkedin     String?  @default("https://linkedin.com/company/mitrakaryapratama")
+  socialInstagram    String?  @default("https://instagram.com/mitrakaryapratama")
+  socialFacebook     String?  @default("https://facebook.com/mitrakaryapratama")
+  socialYoutube      String?
+  
+  // Dynamic Statistics
+  statProjects       Int      @default(185)
+  statClients        Int      @default(92)
+  statProducts       Int      @default(450)
+  statYears          Int      @default(8)
+  
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}
+
+model Category {
+  id          String      @id @default(uuid())
+  name        String
+  slug        String      @unique
+  type        String      // PRODUCT, SERVICE, PORTFOLIO, ARTICLE
+  description String?
+  icon        String?
+  sortOrder   Int         @default(0)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  products    Product[]
+  services    Service[]
+  portfolios  Portfolio[]
+  articles    Article[]
+}
+
+model Product {
+  id             String    @id @default(uuid())
+  title          String
+  slug           String    @unique
+  sku            String    @unique
+  brand          String?
+  categoryId     String
+  category       Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  shortDesc      String
+  description    String
+  specifications String    // JSON text: [{"key": "Spesifikasi", "value": "Detail"}]
+  price          Float?
+  showPrice      Boolean   @default(false)
+  availability   String    @default("READY_STOCK") // READY_STOCK, INDENT, PRE_ORDER
+  isFeatured     Boolean   @default(false)
+  isPublished    Boolean   @default(true)
+  images         String    // JSON text array of image URLs: ["url1", "url2"]
+  views          Int       @default(0)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}
+
+model Service {
+  id             String    @id @default(uuid())
+  title          String
+  slug           String    @unique
+  categoryId     String
+  category       Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  shortDesc      String
+  description    String
+  icon           String?   // Lucide icon name or image url
+  scopeOfWork    String    // JSON text: ["Lingkup 1", "Lingkup 2"]
+  processSteps   String    // JSON text: [{"step": 1, "title": "Konsultasi", "desc": "..."}]
+  advantages     String    // JSON text: ["Keunggulan 1", "Keunggulan 2"]
+  isFeatured     Boolean   @default(false)
+  isPublished    Boolean   @default(true)
+  images         String    // JSON text array of image URLs
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}
+
+model Portfolio {
+  id             String    @id @default(uuid())
+  title          String
+  slug           String    @unique
+  categoryId     String
+  category       Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  clientName     String
+  location       String
+  completionYear Int
+  shortDesc      String
+  description    String
+  images         String    // JSON text array of image URLs
+  isFeatured     Boolean   @default(false)
+  isPublished    Boolean   @default(true)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}
+
+model Article {
+  id             String    @id @default(uuid())
+  title          String
+  slug           String    @unique
+  categoryId     String
+  category       Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  author         String    @default("Redaksi Mitra Karya")
+  thumbnail      String
+  excerpt        String
+  content        String
+  seoTitle       String?
+  seoDescription String?
+  isPublished    Boolean   @default(true)
+  publishedAt    DateTime  @default(now())
+  views          Int       @default(0)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}
+
+model RfqRequest {
+  id               String   @id @default(uuid())
+  rfqNumber        String   @unique // e.g. RFQ-20261031-0001
+  customerName     String
+  companyName      String
+  email            String
+  whatsapp         String
+  requestType      String   // BARANG, JASA, KEDUANYA
+  targetItem       String   // Requested product/service or project title
+  quantity         String   // e.g. "50 unit", "1 paket pekerjaan"
+  specifications   String
+  deliveryLocation String
+  targetDate       String?  // Target completion / delivery
+  attachmentUrl    String?
+  attachmentName   String?
+  status           String   @default("NEW") // NEW, REVIEWED, QUOTATION_PREPARED, SENT, APPROVED, REJECTED, COMPLETED
+  internalNotes    String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model ContactMessage {
+  id            String   @id @default(uuid())
+  name          String
+  company       String?
+  email         String
+  whatsapp      String
+  subject       String
+  message       String
+  isRead        Boolean  @default(false)
+  internalNotes String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model ClientPartner {
+  id         String   @id @default(uuid())
+  name       String
+  logoUrl    String
+  websiteUrl String?
+  sortOrder  Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Testimonial {
+  id             String   @id @default(uuid())
+  clientName     String
+  clientCompany  String
+  clientPosition String?
+  feedback       String
+  rating         Int      @default(5)
+  avatarUrl      String?
+  isPublished    Boolean  @default(true)
+  sortOrder      Int      @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
