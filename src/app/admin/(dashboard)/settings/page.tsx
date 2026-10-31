@@ -15,3 +15,4 @@ export default async function AdminSettingsPage() {
 
   return <CompanySettingsForm initialSettings={settings} />;
 }
+

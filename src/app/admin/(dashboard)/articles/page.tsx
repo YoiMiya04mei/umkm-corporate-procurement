@@ -23,3 +23,4 @@ export default async function AdminArticlesPage() {
 
   return <ArticleManager initialArticles={formattedArticles} categories={categories} />;
 }
+

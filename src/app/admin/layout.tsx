@@ -11,3 +11,4 @@ export default function AdminRootLayout({
 }) {
   return <div className="min-h-screen bg-corporate-light-gray">{children}</div>;
 }
+

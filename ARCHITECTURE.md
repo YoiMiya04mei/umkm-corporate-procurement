@@ -203,3 +203,4 @@ This architecture document specifies the technical design, structure, and operat
    - `Product` schema for items in the catalog.
    - `Article` schema for industry news.
 4. **Core Web Vitals**: Responsive images using `next/image` with WebP format, priority loading for above-the-fold heroes, and zero layout shift.
+

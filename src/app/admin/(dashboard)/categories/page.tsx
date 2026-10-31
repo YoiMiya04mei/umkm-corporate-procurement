@@ -11,3 +11,4 @@ export default async function AdminCategoriesPage() {
 
   return <CategoryManager initialCategories={categories} />;
 }
+

@@ -155,3 +155,4 @@ export default async function PortfolioDetailPage({ params }: PortfolioDetailPro
     </div>
   );
 }
+

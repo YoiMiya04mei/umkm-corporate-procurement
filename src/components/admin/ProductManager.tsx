@@ -579,3 +579,4 @@ export function ProductManager({ initialProducts, categories }: ProductManagerPr
     </div>
   );
 }
+

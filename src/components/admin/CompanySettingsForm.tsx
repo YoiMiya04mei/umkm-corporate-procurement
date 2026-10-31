@@ -447,3 +447,4 @@ export function CompanySettingsForm({ initialSettings }: CompanySettingsFormProp
     </form>
   );
 }
+

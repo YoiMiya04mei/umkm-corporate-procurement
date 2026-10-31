@@ -93,3 +93,4 @@ export const categorySchema = z.object({
   icon: z.string().optional().nullable(),
   sortOrder: z.number().default(0),
 });
+

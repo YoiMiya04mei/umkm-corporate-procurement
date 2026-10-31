@@ -18,3 +18,4 @@ export default async function AdminPortfolioPage() {
 
   return <PortfolioManager initialPortfolios={portfolios} categories={categories} />;
 }
+

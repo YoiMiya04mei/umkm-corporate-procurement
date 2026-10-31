@@ -289,3 +289,4 @@ export function RfqMainForm({ initialItem = "", initialType = "BARANG" }: RfqMai
     </form>
   );
 }
+

@@ -151,3 +151,4 @@ export default async function PortfolioPage({ searchParams }: PortfolioPageProps
     </div>
   );
 }
+

@@ -39,3 +39,4 @@ export function WhatsAppFloatingButton({
     </div>
   );
 }
+

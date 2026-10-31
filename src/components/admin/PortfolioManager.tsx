@@ -308,3 +308,4 @@ export function PortfolioManager({ initialPortfolios, categories }: PortfolioMan
     </div>
   );
 }
+

@@ -242,3 +242,4 @@ export function CategoryManager({ initialCategories }: CategoryManagerProps) {
     </div>
   );
 }
+

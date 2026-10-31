@@ -24,3 +24,4 @@ export default async function AdminProductsPage() {
 
   return <ProductManager initialProducts={formattedProducts} categories={categories} />;
 }
+

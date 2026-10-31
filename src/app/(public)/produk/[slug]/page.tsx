@@ -323,3 +323,4 @@ export default async function ProductDetailPage({ params }: ProductDetailProps) 
     </div>
   );
 }
+

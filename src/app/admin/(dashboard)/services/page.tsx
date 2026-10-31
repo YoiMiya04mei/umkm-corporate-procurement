@@ -18,3 +18,4 @@ export default async function AdminServicesPage() {
 
   return <ServiceManager initialServices={services} categories={categories} />;
 }
+
